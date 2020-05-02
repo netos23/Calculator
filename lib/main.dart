@@ -32,7 +32,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  StringBuffer _currentNumber;
   bool _isLastOper;
 
   String _visualEquation;
@@ -96,7 +95,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    _currentNumber = StringBuffer();
     _clear();
     _answer = '';
     _openDoorsCount = 0;
@@ -292,12 +290,12 @@ class _MyHomePageState extends State<MyHomePage> {
         _appendSymbol(button);
         break;
       case 2:
-        //fixme: проблемы с некоторыми символами
-        if(_isLastOper){
+        var operType = calculator.getPriority(button.actualSymbol)<6;
+        if(_isLastOper&&operType){
           _actualEquation = _actualEquation.substring(0,_actualEquation.length-1);
           _visualEquation = _visualEquation.substring(0,_visualEquation.length-1);
         }else{
-            if(button.actualSymbol!='m'&&button.actualSymbol!='^2') {
+            if(operType&&button.actualSymbol!='^2') {
               _isLastOper = true;
             }else{
               _isLastOper = false;
@@ -306,13 +304,15 @@ class _MyHomePageState extends State<MyHomePage> {
         _appendSymbol(button);
         break;
       case 3:
-        //fixme: сделать нормальное удаление символов
         if(_actualEquation.length>0) {
           _isLastOper = false;
+          var index = _actualEquation.length - 1;
+          var btn = _getButtonByActualSym(_actualEquation[index]);
+
           _actualEquation =
-              _actualEquation.substring(0, _actualEquation.length - 1);
+              _actualEquation.substring(0,index);
           _visualEquation =
-              _visualEquation.substring(0, _visualEquation.length - 1);
+              _visualEquation.substring(0, _visualEquation.length - btn.symbol.length);
         }
         break;
       case 4:
@@ -343,6 +343,22 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
     }
     });
+  }
+
+  PreparedButton _getButtonByActualSym(String sym){
+    for(PreparedButton buttonFromPage1 in buttonsPage1){
+      if(sym==buttonFromPage1.actualSymbol){
+        return buttonFromPage1;
+      }
+    }
+    for(PreparedButton buttonFromPage2 in buttonsPage2){
+      if(sym==buttonFromPage2.actualSymbol){
+        return buttonFromPage2;
+      }
+    }
+
+    return null;
+
   }
 
   void _clear() {
