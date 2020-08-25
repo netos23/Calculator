@@ -133,11 +133,13 @@ double _getResult(String rpaString){
                 tmp = b.pow(exponent);
               }else {
                 res = math.pow(b.toDouble(), a.toDouble());
+                tmp = _parseDecimal(res);
               }
               break;
-              case 'r':
-              res = math.pow(a.toDouble(),1/b.toDouble());
-              break;
+            case 'r':
+            res = math.pow(a.toDouble(),(_parseDecimal(1)/b).toDouble());
+            tmp = _parseDecimal(res);
+            break;
           }
           res = tmp.toDouble();
         }else{

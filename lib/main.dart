@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:calculator/calculator_core.dart' as calculator;
+import 'package:flutter/services.dart';
 
 
 void main() => runApp(MyApp());
@@ -110,6 +111,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _page1 = _getButtons(buttonsPage1);
     _page2 = _getButtons(buttonsPage2);
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
   }
 
   @override
@@ -405,6 +410,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _clear();
           break;
         case 5:
+          print(_actualEquation);
           var sucsess = true;
           try {
             if (_actualEquation == '') {
